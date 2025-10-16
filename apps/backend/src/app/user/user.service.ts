@@ -44,4 +44,16 @@ export class UserService {
         });
     }
 
+
+    async verifyEmail(username: string, token: string) {
+        const user = await this.userModel.findOne({ username });
+        if (!user) throw new NotFoundException('User not found');
+        if (user.verificationToken !== token)
+            throw new BadRequestException('Invalid verification token');
+
+        user.isVerified = true;
+        await user.save();
+        return { message: 'User verified successfully' };
+    }
+
 }

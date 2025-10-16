@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import type { IUserRegister } from '@beije/shared';
 
@@ -13,6 +13,12 @@ export class UserController {
     @Post('register')
     register(@Body() body: IUserRegister) {
         return this.userService.register(body);
+    }
+
+    //verify a user's email
+    @Get('verify-email/:username/:token')
+    verify(@Param('username') username: string, @Param('token') token: string) {
+        return this.userService.verifyEmail(username, token);
     }
 
 }
