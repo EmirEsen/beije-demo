@@ -1,5 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { UserService } from './user.service';
+import type { IUserRegister } from '@beije/shared';
 
 
 //user authentication and authorization endpoints
@@ -10,8 +11,8 @@ export class UserController {
 
     //register a new user
     @Post('register')
-    register(@Body() body: { username: string; email: string }) {
-        return this.userService.register(body.username, body.email);
+    register(@Body() body: IUserRegister) {
+        return this.userService.register(body);
     }
 
 }

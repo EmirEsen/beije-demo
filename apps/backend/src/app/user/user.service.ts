@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { User } from './user.schema';
 import * as crypto from 'crypto';
 import * as nodemailer from 'nodemailer';
+import type { IUserRegister } from '@beije/shared';
 
 @Injectable()
 export class UserService {
@@ -11,11 +12,11 @@ export class UserService {
     constructor(@InjectModel(User.name) private userModel: Model<User>) {
     }
 
-    async register(username: string, email: string) {
+    async register(userRegister: IUserRegister) {
         try {
             const verificationToken = crypto.randomBytes(16).toString('hex');
-            const user = await this.userModel.create({ username, email, verificationToken });
-            await this.sendVerificationEmail(email, username, verificationToken);
+            const user = await this.userModel.create({ username: userRegister.username, email: userRegister.email, verificationToken });
+            await this.sendVerificationEmail(userRegister, verificationToken);
             return user;
         } catch (error: any) {
             if (error.code === 11000) { //this is the unique index error from mongoose
@@ -25,7 +26,7 @@ export class UserService {
         }
     }
 
-    async sendVerificationEmail(email: string, username: string, token: string) {
+    async sendVerificationEmail(userRegister: IUserRegister, token: string) {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -34,10 +35,10 @@ export class UserService {
             },
         });
 
-        const link = `http://localhost:3333/api/user/verify-email/${username}/${token}`;
+        const link = `http://localhost:3333/api/user/verify-email/${userRegister.username}/${token}`;
         await transporter.sendMail({
             from: process.env.GMAIL_USER,
-            to: email,
+            to: userRegister.email,
             subject: 'Verify your email',
             text: `Click here to verify: ${link}`,
         });
