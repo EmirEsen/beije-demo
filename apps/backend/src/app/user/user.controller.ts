@@ -21,4 +21,9 @@ export class UserController {
         return this.userService.verifyEmail(username, token);
     }
 
+    //check if a user is verified by their username
+    @Get('check-verification/:username')
+    checkEmailVerification(@Param('username') username: string) {
+        return this.userService.checkEmailVerification(username);
+    }
 }

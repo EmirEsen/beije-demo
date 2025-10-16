@@ -56,4 +56,13 @@ export class UserService {
         return { message: 'User verified successfully' };
     }
 
+
+    async checkEmailVerification(username: string) {
+        const user = await this.userModel.findOne({ username });
+        if (!user) throw new NotFoundException('User not found');
+        return user.isVerified
+            ? { message: 'User is verified' }
+            : { message: 'User is not verified' };
+    }
+
 }
