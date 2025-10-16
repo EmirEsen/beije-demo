@@ -1,0 +1,58 @@
+{
+  "name": "@beije-demo/backend",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "webpack-cli build",
+          "args": [
+            "--node-env=production"
+          ],
+          "cwd": "apps/backend"
+        },
+        "configurations": {
+          "development": {
+            "args": [
+              "--node-env=development"
+            ]
+          }
+        }
+      },
+      "serve": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "nest start --watch",
+          "cwd": "apps/backend"
+        },
+        "configurations": {
+          "development": {
+            "command": "nest start --watch",
+            "cwd": "apps/backend"
+          },
+          "production": {
+            "command": "nest start",
+            "cwd": "apps/backend"
+          }
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/mongoose": "^11.0.3",
+    "@nestjs/platform-express": "^11.0.0",
+    "mongoose": "^8.19.1",
+    "nodemailer": "^7.0.9",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "^11.0.0",
+    "@types/nodemailer": "^7.0.2"
+  }
+}
