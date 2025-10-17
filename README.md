@@ -240,6 +240,7 @@ npx nx format
 | `MONGO_URI` | MongoDB connection string | `mongodb://localhost:27017/beije_case_db` |
 | `GMAIL_USER` | Gmail username for sending emails | `clinicflowdev@gmail.com` |
 | `GMAIL_PASS` | Gmail app password | `qyct iwht giim gbzj` |
+| `APP_URL` | Base URL for verification links | `http://localhost:3333` |
 
 ### Port Configuration
 - **Backend API**: 3333
