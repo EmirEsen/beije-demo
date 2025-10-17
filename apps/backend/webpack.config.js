@@ -1,5 +1,6 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
 const { join } = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   output: {
@@ -9,6 +10,28 @@ module.exports = {
     }),
   },
   plugins: [
+    // Ignore unused microservice transport dependencies
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^@grpc\/grpc-js$/,
+    }),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^@grpc\/proto-loader$/,
+    }),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^kafkajs$/,
+    }),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^mqtt$/,
+    }),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^nats$/,
+    }),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^ioredis$/,
+    }),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^@nestjs\/websockets\/socket-module$/,
+    }),
     new NxAppWebpackPlugin({
       target: 'node',
       compiler: 'tsc',
