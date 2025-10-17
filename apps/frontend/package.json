@@ -2,10 +2,62 @@
   "name": "@beije-demo/frontend",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "dev": "nx serve @beije-demo/frontend",
+    "build": "nx build @beije-demo/frontend",
+    "lint": "nx lint @beije-demo/frontend",
+    "start": "nx serve @beije-demo/frontend --configuration=production"
+  },
   "dependencies": {
     "@beije/shared": "workspace:*",
     "next": "~15.2.4",
     "react": "19.0.0",
     "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@nx/next": "^21.6.4",
+    "@nx/eslint": "^21.6.4",
+    "eslint": "^9.8.0",
+    "eslint-config-next": "^15.2.4",
+    "typescript": "~5.9.3"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nx/next:build",
+        "options": {
+          "outputPath": "dist/apps/frontend"
+        },
+        "configurations": {
+          "production": {
+            "optimization": true,
+            "sourceMap": false
+          }
+        }
+      },
+      "serve": {
+        "executor": "@nx/next:server",
+        "options": {
+          "buildTarget": "@beije-demo/frontend:build"
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "@beije-demo/frontend:build:development"
+          },
+          "production": {
+            "buildTarget": "@beije-demo/frontend:build:production"
+          }
+        }
+      },
+      "lint": {
+        "executor": "@nx/eslint:eslint",
+        "options": {
+          "lintFilePatterns": [
+            "apps/frontend/**/*.ts",
+            "apps/frontend/**/*.tsx"
+          ]
+        }
+      }
+    }
   }
 }
