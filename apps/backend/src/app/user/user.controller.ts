@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import type { IUserRegister } from '@beije/shared';
 
 
-//user authentication and authorization endpoints
+//user registration endpoints
 @Controller('user')
 export class UserController {
 
@@ -15,15 +15,10 @@ export class UserController {
         return this.userService.register(body);
     }
 
-    //verify a user's email
-    @Get('verify-email/:username/:token')
-    verify(@Param('username') username: string, @Param('token') token: string) {
-        return this.userService.verifyEmail(username, token);
+    //check if the user is verified
+    @Get('check-verification/:username')
+    check(@Param('username') username: string) {
+        return this.userService.checkVerification(username);
     }
 
-    //check if a user is verified by their username
-    @Get('check-verification/:username')
-    checkEmailVerification(@Param('username') username: string) {
-        return this.userService.checkEmailVerification(username);
-    }
 }
