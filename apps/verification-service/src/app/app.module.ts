@@ -4,6 +4,8 @@ import { VerificationService } from './verification/verification.service';
 import { VerificationController } from './verification/verification.controller';
 import { VerificationToken, VerificationTokenSchema } from './verification/verificationToken.schema';
 import { VerificationListener } from './verification/verification.listener';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -18,7 +20,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     MongooseModule.forFeature([{ name: VerificationToken.name, schema: VerificationTokenSchema }]),
   ],
-  controllers: [VerificationController, VerificationListener],
-  providers: [VerificationService],
+  controllers: [AppController, VerificationController, VerificationListener],
+  providers: [AppService, VerificationService],
 })
 export class AppModule { }
