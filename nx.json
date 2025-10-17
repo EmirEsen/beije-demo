@@ -1,15 +1,20 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/eslint.config.mjs"
     ],
-    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
+    "sharedGlobals": [
+      "{workspaceRoot}/.github/workflows/ci.yml"
+    ]
   },
-  "nxCloudId": "68efb9d925a8225dff686ef9",
+  "nxCloudId": "68f0c83ff5b1eb9f942e2d21",
   "plugins": [
     {
       "plugin": "@nx/js/typescript",

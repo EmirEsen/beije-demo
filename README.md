@@ -1,90 +1,280 @@
-# BeijeDemo
+# Beije Fullstack Demo - Monolithic Version
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A monolithic user registration and email verification system built with NestJS, MongoDB.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+## 🏗️ Architecture
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+This is a **monolithic Version of the application** that combines all functionality into a single backend service: [check out the microService Branch for distributed version]
 
-## Finish your CI setup
+- **Backend API** - User authentication, registration, and email verification
+- **Frontend** - Next.js web application
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/oAzihrXp13)
+## 🚀 First Time Setup - [Can start immediately if mongo container running]
 
+### 1. Clone and Install
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd beije-demo
 
-## Generate a library
+# Install dependencies
+pnpm install
 
-```sh
-npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
-```
+# Install NestJS CLI globally (required for development)
+npm install -g @nestjs/cli
 
-## Run tasks
-
-To build the library use:
-
-```sh
-npx nx build pkg1
-```
-
-To run any task with Nx use:
-
-```sh
-npx nx <target> <project-name>
-```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Versioning and releasing
-
-To version and release the library use
-
-```
-npx nx release
-```
-
-Pass `--dry-run` to see what would happen without actually releasing the library.
-
-[Learn more about Nx release &raquo;](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Keep TypeScript project references up to date
-
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
-
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
-
-```sh
+# Sync workspace (fixes TypeScript project references)
 npx nx sync
+
+# Build shared library
+npx nx build shared
 ```
 
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
-
-```sh
-npx nx sync:check
+### 2. Start Infrastructure Services via Docker
+```bash
+# Start MongoDB
+docker run -d --name mongodb -p 27017:27017 mongo:latest
 ```
 
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
+### 3. Environment Setup (Already Included In Repository with .env - Change is Optional)
+Create a `.env` file in the root directory:
+
+```env
+# Database
+MONGO_URI=mongodb://localhost:27017/beije_case_db
+
+# Email Configuration (Optional - for testing)
+# I've Added my own credentials for testing.
+GMAIL_USER=your-email@gmail.com
+GMAIL_PASS=your-app-password
+
+# Service URLs
+APP_URL=http://localhost:3333
+```
+
+### 4. Start All Services
+
+Open **2 separate terminals** and run:
+
+**Terminal 1 - Backend API:**
+```bash
+npx nx serve backend
+```
+
+**Terminal 2 - Frontend:**
+```bash
+npx nx serve frontend
+```
+
+### 5. Verify Services are Running
+
+- **Backend API**: http://localhost:3333/api
+- **Frontend**: http://localhost:4200
+
+## 🧪 Test the Application
+
+# You(tester) can use a available email to receive email
+
+### 1. Register a User
+```bash
+curl -X POST http://localhost:3333/api/user/register \
+  -H "Content-Type: application/json" \
+  -d '{"username": "testuser", "email": "test@example.com"}'
+```
+
+### 2. Check Verification Status
+```bash
+curl http://localhost:3333/api/user/check-verification/testuser
+```
+
+### 3. Verify Email (if email is configured)
+- Check your email for verification link
+- Click the link to verify your account(must be clicked within same device!)
+
+## 🚀 Services Overview
+
+### Backend API (`apps/backend`)
+- **Port**: 3333
+- **Endpoints**:
+  - `GET  http://localhost:3333/api` - Health Check Returns `Hello Beije-demo Backend API`
+  - `POST /api/user/register` - Register new user
+  - `GET /api/user/verify-email/:username/:token` - Verify user email
+  - `GET /api/user/check-verification/:username` - Check verification status
+- **Database**: MongoDB
+- **Email**: Nodemailer with Gmail
+
+### Frontend (`apps/frontend`)
+- **Port**: 4200
+- **Framework**: Next.js with React 19
+- **Features**: Listing Beije Products and add to custom package
+
+## 📦 Modules, Controllers & Services
+-------------------------------------------------------------------------------
+
+### Backend API (`apps/backend`)
+--------------------------------
+
+#### Modules
+- **`AppModule`** - Root module that configures the entire backend application
+  - Imports: `ConfigModule`, `MongooseModule`, `UserModule`
+  - Controllers: `AppController`
+  - Providers: `AppService`
+
+- **`UserModule`** - Handles user-related functionality
+  - Imports: `MongooseModule.forFeature([User])`
+  - Controllers: `UserController`
+  - Providers: `UserService`
+
+#### Controllers
+- **`AppController`** - Health check endpoint
+  - `GET /api` - Returns "Hello Beije-demo Backend API"
+
+- **`UserController`** - User management endpoints
+  - `POST /api/user/register` - Register a new user
+  - `GET /api/user/verify-email/:username/:token` - Verify user email
+  - `GET /api/user/check-verification/:username` - Check user verification status
+
+#### Services
+- **`AppService`** - Basic application service
+- **`UserService`** - Core user business logic
+  - `register()` - Creates new user and sends verification email
+  - `sendVerificationEmail()` - Sends verification email with token
+  - `verifyEmail()` - Verifies user email with token
+  - `checkEmailVerification()` - Checks if user is verified
+
+-------------------------------------------------------------------------------
+
+### Frontend (`apps/frontend`)
+- **Next.js Application** - React-based user interface
+- **Pages**: User registration and verification forms
+- **Framework**: Next.js 15 with React 19
+
+-------------------------------------------------------------------------------
+
+### Shared Package (`shared`)
+- **`IUserRegister`** - TypeScript interface for user registration
+- **Common Types** - Shared interfaces between services
+
+-------------------------------------------------------------------------------
+
+## 🛠️ Tech Stack
+
+- **Backend**: NestJS, MongoDB, Nodemailer
+- **Frontend**: Next.js, React 19, TypeScript
+- **Database**: MongoDB
+- **Email**: Nodemailer with Gmail
+- **Monorepo**: Nx workspace
+- **Package Manager**: pnpm
+
+## 📋 Prerequisites
+
+- Node.js 18+
+- pnpm
+- Docker (for MongoDB)
+
+## 🔄 User Registration Flow
+
+1. **User Registration**
+   ```
+   POST /api/user/register
+   Body: { "username": "john", "email": "john@example.com" }
+   ```
+
+2. **Email Verification**
+   - User receives email with verification link
+   - Link format: `http://localhost:3333/api/user/verify-email/:username/:token`
+
+3. **Verification Process**
+   - User clicks link → Backend API
+   - Service validates token → Marks user as verified
+   - User can now check verification status
+
+## 🗄️ Database Schemas
+
+### User Schema
+```typescript
+{
+  _id: ObjectId (unique)
+  username: string (unique) - Enforced at database level
+  email: string (unique) - Enforced at database level
+  isVerified: boolean
+  verificationToken: string
+}
+```
+
+**Unique Constraints:**
+- Username must be unique across all users
+- Email must be unique across all users
+- Both constraints are enforced at the database level with MongoDB indexes
+- Application-level validation provides specific error messages
+
+## 🏗️ Development
+
+### Available Commands
+```bash
+# Build all projects
+npx nx build
+
+# Build specific project
+npx nx build backend
+npx nx build frontend
+npx nx build shared
+
+# Serve specific project
+npx nx serve backend
+npx nx serve frontend
+
+# Lint code
+npx nx lint
+
+# Format code
+npx nx format
+```
+
+## 🔧 Configuration
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `MONGO_URI` | MongoDB connection string | `mongodb://localhost:27017/beije_case_db` |
+| `GMAIL_USER` | Gmail username for sending emails | `clinicflowdev@gmail.com` |
+| `GMAIL_PASS` | Gmail app password | `qyct iwht giim gbzj` |
+| `APP_URL` | Base URL for verification links | `http://localhost:3333` |
+
+### Port Configuration
+- **Backend API**: 3333
+- **Frontend**: 4200
+
+## 📚 API Documentation
+
+### Backend API Endpoints
+
+#### Register User
+```http
+POST /api/user/register
+Content-Type: application/json
+
+{
+  "username": "string",
+  "email": "string"
+}
+```
+
+#### Verify Email
+```http
+GET /api/user/verify-email/:username/:token
+```
+
+#### Check Verification Status
+```http
+GET /api/user/check-verification/:username
+```
 
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 🤖 AI Tools Used
 
-## Install Nx Console
+### ChatGPT
+- **Debugging assistance** - Helped resolve TypeScript and build issues
+- **Documentation** - Assisted with comprehensive README creation
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
