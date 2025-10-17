@@ -22,19 +22,17 @@
         }
       },
       "serve": {
-        "executor": "nx:run-commands",
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
         "options": {
-          "command": "nest start --watch",
-          "cwd": "apps/backend"
+          "buildTarget": "@beije-demo/backend:build:development"
         },
         "configurations": {
           "development": {
-            "command": "nest start --watch",
-            "cwd": "apps/backend"
+            "buildTarget": "@beije-demo/backend:build:development"
           },
           "production": {
-            "command": "nest start",
-            "cwd": "apps/backend"
+            "buildTarget": "@beije-demo/backend:build:production"
           }
         }
       }
