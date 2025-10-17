@@ -2,6 +2,102 @@
 
 A microservices-based user registration and email verification system built with NestJS, MongoDB, RabbitMQ.
 
+## 🚀 First Time Setup - [Can start imidiatlly if mongo and rabbitMQ containers running]
+
+### 1. Clone and Install
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd beije-demo
+
+# Install dependencies
+pnpm install
+
+# Install NestJS CLI globally (required for development)
+npm install -g @nestjs/cli
+
+# Sync workspace (fixes TypeScript project references)
+npx nx sync
+
+# Build shared library
+npx nx build shared
+```
+
+### 2. Start Infrastructure Services
+```bash
+# Start RabbitMQ
+docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+# Start MongoDB
+docker run -d --name mongodb -p 27017:27017 mongo:latest
+```
+
+### 3. Environment Setup(Already Included In Repository with .env - Change is Optional)
+Create a `.env` file in the root directory:
+
+```env
+# Database
+MONGO_URI=mongodb://localhost:27017/beije_case_db
+
+# RabbitMQ
+RABBITMQ_URL=amqp://localhost:5672
+
+# Email Configuration (Optional - for testing)
+# I Add my own credentials for testing.
+GMAIL_USER=your-email@gmail.com
+GMAIL_PASS=your-app-password
+
+# Service URLs
+APP_URL=http://localhost:3334
+```
+
+### 4. Start All Services
+
+Open **3 separate terminals** and run:
+
+**Terminal 1 - Backend API:**
+```bash
+npx nx serve backend
+```
+
+**Terminal 2 - Verification Service:**
+```bash
+npx nx serve verification-service
+```
+
+**Terminal 3 - Frontend:**
+```bash
+npx nx serve frontend
+```
+
+### 5. Verify Services are Running
+
+- **Backend API**: http://localhost:3333/api
+- **Verification Service**: http://localhost:3334/api
+- **Frontend**: http://localhost:4200
+- **RabbitMQ Management**: http://localhost:15672 (username: guest, password: guest)
+
+## 🧪 Test the Application
+
+# You(tester) can use a available email to receive email
+
+### 1. Register a User
+```bash
+curl -X POST http://localhost:3333/api/user/register \
+  -H "Content-Type: application/json" \
+  -d '{"username": "testuser", "email": "test@example.com"}'
+```
+
+### 2. Check Verification Status
+```bash
+curl http://localhost:3333/api/user/check-verification/testuser
+```
+
+### 3. Verify Email (if email is configured)
+- Check your email for verification link
+- Click the link to verify your account
+
+
 ## 🏗️ Architecture
 
 This application consists of three main services:
@@ -127,100 +223,6 @@ This application consists of three main services:
 - Node.js 18+
 - pnpm
 - Docker (for RabbitMQ and MongoDB)
-
-## 🚀 First Time Setup
-
-### 1. Clone and Install
-```bash
-# Clone the repository
-git clone <your-repo-url>
-cd beije-demo
-
-# Install dependencies
-pnpm install
-
-# Install NestJS CLI globally (required for development)
-npm install -g @nestjs/cli
-
-# Sync workspace (fixes TypeScript project references)
-npx nx sync
-
-# Build shared library
-npx nx build shared
-```
-
-### 2. Start Infrastructure Services
-```bash
-# Start RabbitMQ
-docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
-
-# Start MongoDB
-docker run -d --name mongodb -p 27017:27017 mongo:latest
-```
-
-### 3. Environment Setup
-Create a `.env` file in the root directory:
-
-```env
-# Database
-MONGO_URI=mongodb://localhost:27017/beije_case_db
-
-# RabbitMQ
-RABBITMQ_URL=amqp://localhost:5672
-
-# Email Configuration (Optional - for testing)
-GMAIL_USER=your-email@gmail.com
-GMAIL_PASS=your-app-password
-
-# Service URLs
-APP_URL=http://localhost:3334
-```
-
-### 4. Start All Services
-
-Open **3 separate terminals** and run:
-
-**Terminal 1 - Backend API:**
-```bash
-npx nx serve backend
-```
-
-**Terminal 2 - Verification Service:**
-```bash
-npx nx serve verification-service
-```
-
-**Terminal 3 - Frontend:**
-```bash
-npx nx serve frontend
-```
-
-### 5. Verify Services are Running
-
-- **Backend API**: http://localhost:3333/api
-- **Verification Service**: http://localhost:3334/api
-- **Frontend**: http://localhost:4200
-- **RabbitMQ Management**: http://localhost:15672 (username: guest, password: guest)
-
-## 🧪 Test the Application
-
-# You(tester) can use a available email to receive email
-
-### 1. Register a User
-```bash
-curl -X POST http://localhost:3333/api/user/register \
-  -H "Content-Type: application/json" \
-  -d '{"username": "testuser", "email": "test@example.com"}'
-```
-
-### 2. Check Verification Status
-```bash
-curl http://localhost:3333/api/user/check-verification/testuser
-```
-
-### 3. Verify Email (if email is configured)
-- Check your email for verification link
-- Click the link to verify your account
 
 ## 🔄 User Registration Flow
 
