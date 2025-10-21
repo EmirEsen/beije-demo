@@ -1,0 +1,33 @@
+{
+    "name": "@beije-demo/frontend",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@emotion/react": "^11.11.4",
+        "@emotion/styled": "^11.11.5",
+        "@modelcontextprotocol/sdk": "latest",
+        "@mui/icons-material": "latest",
+        "@mui/material": "latest",
+        "@mui/material-pigment-css": "latest",
+        "@reduxjs/toolkit": "latest",
+        "@vercel/analytics": "latest",
+        "@vercel/sdk": "latest",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
+        "lucide-react": "^0.454.0",
+        "next": "~15.2.4",
+        "react": "^18",
+        "react-dom": "^18",
+        "react-redux": "latest",
+        "redux": "latest"
+    },
+    "devDependencies": {
+        "postcss": "^8.5"
+    }
+}
