@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "buildCommand": "chmod +x build-frontend.sh && ./build-frontend.sh",
+    "buildCommand": "cp apps/frontend/package.vercel.json apps/frontend/package.json && cp apps/frontend/next.config.vercel.js apps/frontend/next.config.js && cd apps/frontend && node pre-build.js && npm install && npm run build",
     "outputDirectory": "apps/frontend/dist",
     "installCommand": "echo 'Using buildCommand for installation'"
 }
