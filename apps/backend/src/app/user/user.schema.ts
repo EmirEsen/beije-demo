@@ -4,14 +4,11 @@ import { Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class User extends Document {
 
-    @Prop({ required: true, unique: true })
+    @Prop({ required: true })
     username!: string;
 
-    @Prop({ required: true, unique: true })
+    @Prop({ required: true })
     email!: string;
-
-    @Prop({ required: true, unique: true })
-    verificationToken!: string;
 
     @Prop({ default: false })
     isVerified!: boolean;
@@ -19,7 +16,6 @@ export class User extends Document {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-// Ensure unique indexes are created
+// Create unique indexes
 UserSchema.index({ username: 1 }, { unique: true });
 UserSchema.index({ email: 1 }, { unique: true });
-UserSchema.index({ verificationToken: 1 }, { unique: true });

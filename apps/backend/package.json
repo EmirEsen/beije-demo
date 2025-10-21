@@ -22,19 +22,17 @@
         }
       },
       "serve": {
-        "executor": "nx:run-commands",
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
         "options": {
-          "command": "nest start --watch",
-          "cwd": "apps/backend"
+          "buildTarget": "@beije-demo/backend:build:development"
         },
         "configurations": {
           "development": {
-            "command": "nest start --watch",
-            "cwd": "apps/backend"
+            "buildTarget": "@beije-demo/backend:build:development"
           },
           "production": {
-            "command": "nest start",
-            "cwd": "apps/backend"
+            "buildTarget": "@beije-demo/backend:build:production"
           }
         }
       }
@@ -42,18 +40,11 @@
   },
   "dependencies": {
     "@beije/shared": "workspace:*",
-    "@nestjs/common": "^11.0.0",
-    "@nestjs/core": "^11.0.0",
-    "@nestjs/mongoose": "^11.0.3",
-    "@nestjs/platform-express": "^11.0.0",
-    "mongoose": "^8.19.1",
-    "nodemailer": "^7.0.9",
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@nestjs/testing": "^11.0.0",
-    "@types/nodemailer": "^7.0.2"
+    "@types/nodemailer": "^7.0.2",
+    "webpack": "^5.102.1"
   }
 }

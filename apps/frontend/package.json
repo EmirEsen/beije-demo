@@ -2,10 +2,74 @@
   "name": "@beije-demo/frontend",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "dev": "nx serve @beije-demo/frontend",
+    "build": "nx build @beije-demo/frontend",
+    "lint": "nx lint @beije-demo/frontend",
+    "start": "nx serve @beije-demo/frontend --configuration=production"
+  },
   "dependencies": {
     "@beije/shared": "workspace:*",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@modelcontextprotocol/sdk": "latest",
+    "@mui/icons-material": "latest",
+    "@mui/material": "latest",
+    "@mui/material-pigment-css": "latest",
+    "@reduxjs/toolkit": "latest",
+    "@vercel/analytics": "latest",
+    "@vercel/sdk": "latest",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.454.0",
     "next": "~15.2.4",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react": "^18",
+    "react-dom": "^18",
+    "react-redux": "latest",
+    "redux": "latest"
+  },
+  "devDependencies": {
+    "@nx/next": "^21.6.4",
+    "@nx/eslint": "^21.6.4",
+    "postcss": "^8.5"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nx/next:build",
+        "options": {
+          "outputPath": "dist/apps/frontend"
+        },
+        "configurations": {
+          "production": {
+            "optimization": true,
+            "sourceMap": false
+          }
+        }
+      },
+      "serve": {
+        "executor": "@nx/next:server",
+        "options": {
+          "buildTarget": "@beije-demo/frontend:build"
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "@beije-demo/frontend:build:development"
+          },
+          "production": {
+            "buildTarget": "@beije-demo/frontend:build:production"
+          }
+        }
+      },
+      "lint": {
+        "executor": "@nx/eslint:eslint",
+        "options": {
+          "lintFilePatterns": [
+            "apps/frontend/**/*.ts",
+            "apps/frontend/**/*.tsx"
+          ]
+        }
+      }
+    }
   }
 }

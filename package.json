@@ -2,7 +2,15 @@
   "name": "@beije-demo/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start:backend": "nx serve @beije-demo/backend --configuration=development",
+    "start:verification": "nx serve @beije-demo/verification-service --configuration=development",
+    "start:frontend": "nx serve @beije-demo/frontend",
+    "build:backend": "nx build @beije-demo/backend --configuration=development",
+    "build:verification": "nx build @beije-demo/verification-service --configuration=development",
+    "build:frontend": "nx build @beije-demo/frontend",
+    "dev": "concurrently \"npm run start:backend\" \"npm run start:verification\" \"npm run start:frontend\""
+  },
   "private": true,
   "devDependencies": {
     "@eslint/compat": "^1.1.1",
@@ -28,6 +36,7 @@
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
     "@types/node": "20.19.9",
+    "@types/nodemailer": "^7.0.2",
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",
     "eslint": "^9.8.0",
@@ -50,11 +59,11 @@
     "@nestjs/common": "^11.0.0",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.0",
+    "@nestjs/microservices": "^11.1.6",
+    "@nestjs/mongoose": "^11.0.3",
     "@nestjs/platform-express": "^11.0.0",
-    "axios": "^1.6.0",
-    "next": "~15.2.4",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "mongoose": "^8.19.1",
+    "nodemailer": "^7.0.9",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0"
   }
