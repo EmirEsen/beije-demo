@@ -3,6 +3,7 @@ import PadIcon from "../components/icons/PadIcon"
 import TamponIcon from "../components/icons/TamponIcon"
 import HeatingPatchIcon from "../components/icons/HeatingPatchIcon"
 import PillIcon from "../components/icons/PillIcon"
+import TongPadIcon from "../components/icons/TongPadIcon"
 
 export interface ProductInfo {
     icon: React.ReactElement
@@ -19,6 +20,7 @@ export class ProductHelper {
         const iconProps = { size, color: 'white' }
 
         // Check for specific patterns
+        if (name.includes('tanga')) return React.createElement(TongPadIcon, iconProps)
         if (name.includes('tampon')) return React.createElement(TamponIcon, iconProps)
         if (name.includes('günlük')) return React.createElement(PadIcon, iconProps)
         if (name.includes('ped')) return React.createElement(PadIcon, iconProps)
