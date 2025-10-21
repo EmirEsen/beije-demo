@@ -11,69 +11,55 @@ export interface ProductInfo {
 
 export class ProductHelper {
 
-    // Product ID to icon mapping
-    private static productIconMap: Record<string, React.ComponentType<any>> = {
-        // Ped products
-        '68f75f6cd33c8a5679fc6b12': PadIcon, // Standart Ped
-        '68f75f6cd33c8a5679fc6b14': PadIcon, // Süper Ped
-        '68f75f6cd33c8a5679fc6b16': PadIcon, // Süper+ Ped
-        '68f75f6cd33c8a5679fc6b18': PadIcon, // Günlük Ped Standart
-        '68f75f6cd33c8a5679fc6b1a': PadIcon, // Günlük Ped İnce
+    /**
+     * Gets the appropriate icon component for a product by name
+     */
+    static getIconComponentByName(productName: string, size: number = 24): React.ReactElement {
+        const name = productName.toLowerCase()
+        const iconProps = { size, color: 'white' }
 
-        // Tampon products
-        '68f75f6cd33c8a5679fc6b1c': TamponIcon, // Mini Tampon
-        '68f75f6cd33c8a5679fc6b1e': TamponIcon, // Regular Tampon
-        '68f75f6cd33c8a5679fc6b20': TamponIcon, // Süper Tampon
+        // Check for specific patterns
+        if (name.includes('tampon')) return React.createElement(TamponIcon, iconProps)
+        if (name.includes('günlük')) return React.createElement(PadIcon, iconProps)
+        if (name.includes('ped')) return React.createElement(PadIcon, iconProps)
+        if (name.includes('ısı') || name.includes('bandı')) return React.createElement(HeatingPatchIcon, iconProps)
+        if (name.includes('cycle') || name.includes('cranberry')) return React.createElement(PillIcon, iconProps)
 
-        // Supportive products
-        '68f75f6cd33c8a5679fc6b22': HeatingPatchIcon, // Isı Bandı 2'li
-        '68f75f6cd33c8a5679fc6b24': HeatingPatchIcon, // Isı Bandı 4'lü
-        '68f75f6cd33c8a5679fc6b26': PillIcon, // Cycle Essentials
-        '68f75f6cd33c8a5679fc6b28': PillIcon, // Cranberry Essentials
+        // Default fallback
+        return React.createElement(PadIcon, iconProps)
     }
 
-    // Product ID to color mapping
-    private static productColorMap: Record<string, string> = {
+    /**
+     * Gets the appropriate color for a product by name
+     */
+    static getColorByName(productName: string): string {
+        const name = productName.toLowerCase()
+
         // Ped colors
-        '68f75f6cd33c8a5679fc6b12': '#ef4e25', // Standart Ped
-        '68f75f6cd33c8a5679fc6b14': '#b62229', // Süper Ped
-        '68f75f6cd33c8a5679fc6b16': '#610e00', // Süper+ Ped
-        '68f75f6cd33c8a5679fc6b18': '#f68c1e', // Günlük Ped Standart
-        '68f75f6cd33c8a5679fc6b1a': '#ce7328', // Günlük Ped İnce
+        if (name.includes('standart') && name.includes('ped')) return '#ef4e25'
+        if (name.includes('süper+')) return '#610e00'
+        if (name.includes('süper') && name.includes('ped')) return '#b62229'
+        if (name.includes('tanga')) return '#ce7328'
+        if (name.includes('günlük')) return '#f68c1e'
 
         // Tampon colors
-        '68f75f6cd33c8a5679fc6b1c': '#a2557c', // Mini Tampon
-        '68f75f6cd33c8a5679fc6b1e': '#693566', // Regular Tampon
-        '68f75f6cd33c8a5679fc6b20': '#3d223c', // Süper Tampon
+        if (name.includes('mini')) return '#a2557c'
+        if (name.includes('standart') && name.includes('tampon')) return '#693566'
+        if (name.includes('süper') && name.includes('tampon')) return '#3d223c'
 
         // Supportive product colors
-        '68f75f6cd33c8a5679fc6b22': '#FF8C00', // Isı Bandı 2'li
-        '68f75f6cd33c8a5679fc6b24': '#FF8C00', // Isı Bandı 4'lü
-        '68f75f6cd33c8a5679fc6b26': '#ce7328', // Cycle Essentials
-        '68f75f6cd33c8a5679fc6b28': '#693566', // Cranberry Essentials
-    }
+        if (name.includes('ısı') || name.includes('bandı')) return '#FF8C00'
+        if (name.includes('cycle')) return '#ce7328'
+        if (name.includes('cranberry')) return '#693566'
 
-    /**
-     * Gets the appropriate icon component for a product by ID
-     */
-    static getIconComponentById(productId: string, size: number = 24): React.ReactElement {
-        const IconComponent = this.productIconMap[productId] || PadIcon
-        const color = 'white'
-        const iconProps = { size, color }
-
-        return React.createElement(IconComponent, iconProps)
-    }
-
-    /**
-     * Gets the appropriate color for a product by ID
-     */
-    static getColorById(productId: string): string {
-        return this.productColorMap[productId] || '#666666'
+        // Default fallback
+        return '#666666'
     }
 
 }
 
 // Export convenience functions
-export const getProductIconComponentById = (productId: string, size: number = 24): React.ReactElement =>
-    ProductHelper.getIconComponentById(productId, size)
-export const getProductColorById = (productId: string): string => ProductHelper.getColorById(productId)
+export const getProductIconComponentByName = (productName: string, size: number = 24): React.ReactElement =>
+    ProductHelper.getIconComponentByName(productName, size)
+
+export const getProductColorByName = (productName: string): string => ProductHelper.getColorByName(productName)

@@ -38,10 +38,10 @@ export const getSubCategoryDisplayName = (categoryName: string) => {
 /**
  * Gets the appropriate icon component for a subcategory
  */
-export const getSubCategoryIcon = (categoryName: string, size: number = 24, color: string = "black"): React.ReactElement => {
+export const getSubCategoryIcon = (subCategoryName: string, size: number = 24, color: string = "black"): React.ReactElement => {
     const iconProps = { size, color }
 
-    switch (categoryName) {
+    switch (subCategoryName) {
         case MenstrualSubCategory.PAD:
             return React.createElement(PadIcon, iconProps)
         case MenstrualSubCategory.PANTY_LINER:
