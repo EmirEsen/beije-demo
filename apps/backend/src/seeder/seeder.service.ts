@@ -188,14 +188,14 @@ export class SeederService implements OnModuleInit {
                 // SUPPORTIVE Products - HEATING_PAD
                 {
                     name: "2'li Paket Isı Bandı",
-                    price: 49.75,
-                    packageSize: 2,
+                    price: 99.5,
+                    packageSize: 1,
                     subcategoryId: subCategories.find(c => c.name === SupportiveSubCategory.HEATING_PAD)?._id,
                 },
                 {
                     name: "4'li Paket Isı Bandı",
-                    price: 46.9,
-                    packageSize: 4,
+                    price: 187.55,
+                    packageSize: 1,
                     subcategoryId: subCategories.find(c => c.name === SupportiveSubCategory.HEATING_PAD)?._id,
                 },
                 // SUPPORTIVE Products - CYCLE_ESSENTIALS
