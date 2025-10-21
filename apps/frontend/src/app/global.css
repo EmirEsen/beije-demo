@@ -3,14 +3,14 @@ html {
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
     Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-  line-height: 1.5;
+  line-height: 1.7;
   tab-size: 4;
   scroll-behavior: smooth;
 }
 
 body {
   font-family: inherit;
-  line-height: inherit;
+  line-height: 1.7;
   margin: 0;
 }
 
@@ -19,6 +19,83 @@ h2,
 p,
 pre {
   margin: 0;
+}
+
+/* Enhanced line spacing for better readability */
+p {
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  line-height: 1.4;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+h2 {
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+  font-weight: 500;
+}
+
+h3 {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+h4,
+h5,
+h6 {
+  line-height: 1.7;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+/* Improved spacing for lists */
+ul,
+ol {
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+li {
+  line-height: 1.8;
+  margin-bottom: 0.5rem;
+}
+
+/* Enhanced spacing for form elements */
+input,
+textarea,
+select {
+  line-height: 1.6;
+  padding: 0.75rem;
+}
+
+button {
+  line-height: 1.6;
+  padding: 0.75rem 1rem;
+}
+
+/* Better spacing for cards and containers */
+.card,
+.container,
+.box {
+  line-height: 1.7;
+}
+
+/* Improved spacing for navigation */
+nav a {
+  line-height: 1.6;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Better spacing for table content */
+td,
+th {
+  line-height: 1.7;
+  padding: 0.75rem;
 }
 
 *,

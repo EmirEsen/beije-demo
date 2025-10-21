@@ -25,6 +25,17 @@ export default function Index() {
               color: 'white'
             }}>
             <div className="text-container">
+              <div style={{
+                backgroundColor: '#fff3cd',
+                border: '1px solid #ffeaa7',
+                borderRadius: '6px',
+                padding: '12px',
+                marginBottom: '10px',
+                fontSize: '12px',
+                color: '#856404'
+              }}>
+                <strong>⚠️ Important:</strong> Please check the project startup instructions below to properly run all services with Docker and shared types.
+              </div>
               <h2>
                 <svg
                   fill="none"
@@ -40,6 +51,7 @@ export default function Index() {
                 </svg>
                 <span>You&apos;re up and running</span>
               </h2>
+
               <Link
                 href="/custom-packet"
                 style={{
@@ -88,6 +100,61 @@ export default function Index() {
 
 
 
+
+          <div id="features" style={{ marginTop: '40px', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+            <h3 style={{ color: '#b62229', marginBottom: '20px' }}>🚀 Project Features</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px' }}>
+              <div style={{ padding: '15px', backgroundColor: 'white', borderRadius: '6px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h4 style={{ color: '#b62229', margin: '0 0 10px 0' }}>✅ Frontend Stack</h4>
+                <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                  <li>Next.js 15 with App Router</li>
+                  <li>Material-UI Components</li>
+                  <li>RTK Query API Integration</li>
+                  <li>Redux Global State Management</li>
+                  <li>TypeScript Shared Types</li>
+                </ul>
+              </div>
+              <div style={{ padding: '15px', backgroundColor: 'white', borderRadius: '6px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h4 style={{ color: '#b62229', margin: '0 0 10px 0' }}>✅ Backend Stack</h4>
+                <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                  <li>NestJS Microservices</li>
+                  <li>MongoDB Database</li>
+                  <li>RabbitMQ Message Queue</li>
+                  <li>Automated Database Seeding</li>
+                  <li>RESTful API Endpoints</li>
+                </ul>
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: '#e8f4fd', padding: '20px', borderRadius: '8px', border: '1px solid #b3d9ff' }}>
+              <h3 style={{ color: '#b62229', marginBottom: '15px' }}>🐳 Docker Infrastructure</h3>
+              <div style={{ backgroundColor: '#2d3748', color: '#e2e8f0', padding: '15px', borderRadius: '6px', fontFamily: 'monospace', fontSize: '14px', marginBottom: '15px' }}>
+                <div style={{ color: '#68d391' }}># Start RabbitMQ</div>
+                <div>docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management</div>
+                <br />
+                <div style={{ color: '#68d391' }}># Start MongoDB</div>
+                <div>docker run -d --name mongodb -p 27017:27017 mongo:latest</div>
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: '#f0f9ff', padding: '20px', borderRadius: '8px', border: '1px solid #bae6fd', marginTop: '20px' }}>
+              <h3 style={{ color: '#b62229', marginBottom: '15px' }}>🚀 Start All Services</h3>
+              <p style={{ marginBottom: '15px', color: '#374151' }}>Open 3 separate terminals and run:</p>
+              <div style={{ backgroundColor: '#1f2937', color: '#f9fafb', padding: '15px', borderRadius: '6px', fontFamily: 'monospace', fontSize: '14px' }}>
+                <div style={{ color: '#68d391' }}># First, build shared types (required for all services)</div>
+                <div style={{ marginBottom: '15px' }}>npx nx build @beije/shared</div>
+                <br />
+                <div style={{ color: '#fbbf24' }}>Terminal 1 - Backend API:</div>
+                <div style={{ marginBottom: '10px' }}>npx nx serve backend</div>
+                <br />
+                <div style={{ color: '#fbbf24' }}>Terminal 2 - Verification Service:</div>
+                <div style={{ marginBottom: '10px' }}>npx nx serve verification-service</div>
+                <br />
+                <div style={{ color: '#fbbf24' }}>Terminal 3 - Frontend:</div>
+                <div>npx nx serve frontend</div>
+              </div>
+            </div>
+          </div>
 
           <p id="love">
             Carefully crafted with
