@@ -1,17 +1,11 @@
 "use client";
 import { createContext, useContext, useState } from "react";
+import { ProductEntity } from "@beije/shared";
 
-type SelectedProduct = {
-    id: string;
-    name: string;
-    quantity: number;
-    price: number;
-    subcategoryId: string;
-};
 
 interface CustomPacketContextType {
-    selections: SelectedProduct[];
-    addProduct: (product: SelectedProduct) => void;
+    selections: ProductEntity[];
+    addProduct: (product: ProductEntity) => void;
     removeProduct: (id: string) => void;
     updateQuantity: (id: string, quantity: number) => void;
     clearSelection: () => void;
@@ -22,14 +16,15 @@ interface CustomPacketContextType {
 const CustomPacketContext = createContext<CustomPacketContextType | null>(null);
 
 export const CustomPacketProvider = ({ children }: { children: React.ReactNode }) => {
-    const [selections, setSelections] = useState<SelectedProduct[]>([]);
+    const [selections, setSelections] = useState<ProductEntity[]>([]);
 
-    const addProduct = (product: SelectedProduct) => {
+    const addProduct = (product: ProductEntity) => {
         setSelections((prev) => {
-            const existing = prev.find((p) => p.id === product.id);
+            const existing = prev.find((p) => p._id === product._id);
             if (existing) {
+                const newPackageSize = existing.packageSize + product.packageSize;
                 return prev.map((p) =>
-                    p.id === product.id ? { ...p, quantity: p.quantity + product.quantity } : p
+                    p._id === product._id ? { ...p, packageSize: newPackageSize } : p
                 );
             }
             return [...prev, product];
@@ -37,26 +32,26 @@ export const CustomPacketProvider = ({ children }: { children: React.ReactNode }
     };
 
     const removeProduct = (id: string) => {
-        setSelections((prev) => prev.filter((p) => p.id !== id));
+        setSelections((prev) => prev.filter((p) => p._id !== id));
     };
 
     const updateQuantity = (id: string, quantity: number) => {
         setSelections((prev) => {
             if (quantity <= 0) {
-                return prev.filter((p) => p.id !== id);
+                return prev.filter((p) => p._id !== id);
             }
-            return prev.map((p) => (p.id === id ? { ...p, quantity } : p));
+            return prev.map((p) => (p._id === id ? { ...p, packageSize: quantity } : p));
         });
     };
 
     const clearSelection = () => setSelections([]);
 
     const getTotalItems = () => {
-        return selections.reduce((sum, item) => sum + item.quantity, 0);
+        return selections.reduce((sum, item) => sum + item.packageSize, 0);
     };
 
     const getTotalPrice = () => {
-        return selections.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+        return selections.reduce((sum, item) => sum + (item.packageSize * item.price), 0);
     };
 
     return (
