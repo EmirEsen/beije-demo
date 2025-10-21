@@ -1,7 +1,9 @@
 import './global.css';
+import Link from 'next/link';
 import ThemeProvider from '../providers/ThemeProvider';
 import ReduxProvider from '../providers/ReduxProvider';
 import Footer from '../components/Footer';
+import CartIndicator from '../components/CartIndicator';
 
 export const metadata = {
   title: 'Welcome to frontend',
@@ -18,8 +20,44 @@ export default function RootLayout({
       <body>
         <ReduxProvider>
           <ThemeProvider>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <div >
+            <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+              {/* Header with Cart Indicator */}
+              <header style={{
+                backgroundColor: "#FFFFFF",
+                borderBottom: "1px solid #E0E0E0",
+                padding: "1rem 0",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "sticky",
+                top: 0,
+                zIndex: 1000
+              }}>
+                <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
+                  maxWidth: "1200px",
+                  padding: "0 2rem"
+                }}>
+                  <Link
+                    href="/"
+                    style={{
+                      fontSize: "1.5rem",
+                      fontWeight: 600,
+                      color: "#b62229",
+                      textDecoration: "none",
+                      cursor: "pointer"
+                    }}
+                  >
+                    beije
+                  </Link>
+                  <CartIndicator />
+                </div>
+              </header>
+
+              <div style={{ flex: 1 }}>
                 {children}
               </div>
               <Footer />
