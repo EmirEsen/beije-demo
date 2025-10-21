@@ -7,10 +7,10 @@ console.log('Starting pre-build process...');
 try {
     // First, build the shared package
     console.log('Building shared package...');
-    execSync('cd ../../shared && npm run build', { stdio: 'inherit' });
+    execSync('cd ../shared && npm run build', { stdio: 'inherit' });
 
     // Copy shared package to frontend node_modules
-    const sharedPath = path.join(__dirname, '../../shared');
+    const sharedPath = path.join(__dirname, '../shared');
     const targetPath = path.join(__dirname, 'node_modules/@beije/shared');
 
     console.log('Copying shared package...');
