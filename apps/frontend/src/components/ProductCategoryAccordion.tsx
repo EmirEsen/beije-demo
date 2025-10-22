@@ -5,19 +5,11 @@ import { ExpandMore } from "@mui/icons-material"
 import { getSubCategoryDisplayName, getSubCategoryIcon } from "../lib/getCategoryAssets"
 import { useCustomPacket } from "../contexts/CustomPacketContext"
 import ProductItem from "./ProductItem"
-import { ProductEntity } from "@beije/shared"
+import { ISubCategory, IProduct } from "@beije/shared"
 
-
-interface SubCategory {
-    _id: string
-    name: string
-    icon: string
-    description?: string
-    variants: ProductEntity[]
-}
 
 interface ProductCategoryAccordionProps {
-    subCategory: SubCategory
+    subCategory: ISubCategory & { variants: IProduct[] }
     defaultExpanded?: boolean
 }
 
@@ -26,7 +18,7 @@ export default function ProductCategoryAccordion({ subCategory, defaultExpanded 
 
     // Calculate total quantity for this category
     const categoryItems = selections.filter(item =>
-        subCategory.variants.some(variant => variant._id === item._id)
+        subCategory.variants.some(variant => variant.id === item.id)
     )
 
     // Get all items with quantity > 0 to show in header
@@ -175,14 +167,10 @@ export default function ProductCategoryAccordion({ subCategory, defaultExpanded 
                     </Alert>
                 )}
 
-                {subCategory.variants.map((variant, index) => (
+                {subCategory.variants.map((variant: IProduct, index: number) => (
                     <ProductItem
-                        key={variant._id}
-                        name={variant.name}
-                        productId={variant._id}
-                        price={variant.price}
-                        packageSize={variant.packageSize}
-                        subcategoryId={subCategory._id}
+                        key={variant.id}
+                        product={variant}
                         isFirst={index === 0}
                     />
                 ))}

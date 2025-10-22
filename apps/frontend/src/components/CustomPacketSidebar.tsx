@@ -7,6 +7,7 @@ import { useGetSubCategoriesQuery } from "../store/apis/subCategoryApi"
 import { addToCart } from "../store/slices/cartSlice"
 import TrashIcon from "./icons/TrashIcon"
 import TwoMonthDeliveryBadge from "./icons/TwoMonthDeliveryBadge"
+import { IProduct } from "@beije/shared"
 
 export default function CustomPacketSidebar() {
     const dispatch = useDispatch()
@@ -16,8 +17,8 @@ export default function CustomPacketSidebar() {
     const totalPrice = getTotalPrice()
 
     // Group items by subcategory
-    const groupedItems = selections.reduce((acc, item) => {
-        const subcategory = subCategories?.find(sub => sub._id === item.subcategoryId)
+    const groupedItems = selections.reduce((acc: Record<string, IProduct[]>, item: IProduct) => {
+        const subcategory = subCategories?.find(sub => sub.id === item.subcategoryId)
         if (subcategory) {
             const subcategoryKey = subcategory.name
             if (!acc[subcategoryKey]) {
@@ -48,7 +49,7 @@ export default function CustomPacketSidebar() {
     const handleRemoveCategory = (subcategoryName: string) => {
         const itemsInCategory = groupedItems[subcategoryName] || []
         itemsInCategory.forEach(item => {
-            removeProduct(item._id)
+            removeProduct(item.id)
         })
     }
 
@@ -56,7 +57,7 @@ export default function CustomPacketSidebar() {
         // Add all selected items to the global cart
         selections.forEach(item => {
             dispatch(addToCart({
-                productId: item._id,
+                productId: item.id,
                 name: item.name,
                 price: item.price * item.packageSize, // Total price for the package
                 quantity: 1 // Each selection is one package
@@ -93,7 +94,7 @@ export default function CustomPacketSidebar() {
             {/* Package Contents */}
             {Object.keys(groupedItems).length > 0 ? (
                 <Box sx={{ mb: 4 }}>
-                    {Object.entries(groupedItems).map(([subcategoryName, items]) => (
+                    {Object.entries(groupedItems).map(([subcategoryName, items]: [string, IProduct[]]) => (
                         <Box
                             key={subcategoryName}
                             sx={{
@@ -136,9 +137,9 @@ export default function CustomPacketSidebar() {
                             </Box>
 
                             {/* Product items */}
-                            {items.map((item) => (
+                            {items.map((item: IProduct) => (
                                 <Box
-                                    key={item._id}
+                                    key={item.id}
                                     sx={{
                                         display: "flex",
                                         alignItems: "center",

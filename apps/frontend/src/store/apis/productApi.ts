@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { ProductEntity } from '@beije/shared';
+import { IProduct } from '@beije/shared';
 import { baseQuery } from './baseApi';
 
 export const productApi = createApi({
@@ -8,19 +8,19 @@ export const productApi = createApi({
     tagTypes: ['Product'],
     endpoints: (builder) => ({
         // Products endpoints
-        getProducts: builder.query<ProductEntity[], void>({
+        getProducts: builder.query<IProduct[], void>({
             query: () => '/products',
             providesTags: ['Product'],
         }),
-        getProductById: builder.query<ProductEntity, string>({
+        getProductById: builder.query<IProduct, string>({
             query: (id) => `/products/${id}`,
             providesTags: (result, error, id) => [{ type: 'Product', id }],
         }),
-        getProductsBySubcategory: builder.query<ProductEntity[], string>({
+        getProductsBySubcategory: builder.query<IProduct[], string>({
             query: (subcategoryId) => `/products?subcategoryId=${subcategoryId}`,
             providesTags: ['Product'],
         }),
-        getActiveProducts: builder.query<ProductEntity[], void>({
+        getActiveProducts: builder.query<IProduct[], void>({
             query: () => '/products?active=true',
             providesTags: ['Product'],
         }),

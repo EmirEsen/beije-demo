@@ -4,51 +4,34 @@ import { Box, Typography, IconButton } from "@mui/material"
 import { Add, Remove } from "@mui/icons-material"
 import { getProductIconComponentByName, getProductColorByName } from "../lib/getProductAssets"
 import { useCustomPacket } from "../contexts/CustomPacketContext"
+import { IProduct } from "@beije/shared"
+
 
 interface ProductItemProps {
-    name: string
-    productId: string
-    price: number
-    packageSize: number
-    subcategoryId: string
+    product: IProduct
     isFirst?: boolean
 }
 
-export default function ProductItem({ name, productId, price, packageSize, subcategoryId, isFirst = false }: ProductItemProps) {
-    console.log('ProductItem rendered:', { name, productId, packageSize })
+export default function ProductItem({ product, isFirst = false }: ProductItemProps) {
     const { selections, addProduct, updateQuantity } = useCustomPacket()
-    const quantity = selections.find((item) => item._id === productId)?.packageSize || 0
+    const quantity = selections.find((item) => item.id === product.id)?.packageSize || 0
 
 
     const handleIncrement = () => {
-        console.log('handleIncrement called', {
-            productName: name,
-            productId,
-            quantity,
-            packageSize,
-            allSelections: selections.map(s => ({ id: s._id, name: s.name, packageSize: s.packageSize }))
-        })
         if (quantity === 0) {
-            console.log('Adding new product')
             addProduct({
-                _id: productId,
-                name,
-                price,
-                packageSize: packageSize,
-                subcategoryId,
-                isActive: true
+                ...product
             })
         } else {
-            console.log('Updating quantity', quantity + packageSize)
-            updateQuantity(productId, quantity + packageSize)
+            updateQuantity(product.id, quantity + product.packageSize)
         }
     }
 
     const handleDecrement = () => {
-        if (quantity >= packageSize) {
-            updateQuantity(productId, quantity - packageSize)
+        if (quantity >= product.packageSize) {
+            updateQuantity(product.id, quantity - product.packageSize)
         } else if (quantity > 0) {
-            updateQuantity(productId, 0)
+            updateQuantity(product.id, 0)
         }
     }
 
@@ -77,7 +60,7 @@ export default function ProductItem({ name, productId, price, packageSize, subca
                 {/* Icon */}
                 <Box
                     sx={{
-                        backgroundColor: getProductColorByName(name),
+                        backgroundColor: getProductColorByName(product.name),
                         borderRadius: "0px 4px 4px 0px",
                         px: 1.5,
                         pl: 6,
@@ -89,7 +72,7 @@ export default function ProductItem({ name, productId, price, packageSize, subca
                         flexShrink: 0,
                     }}
                 >
-                    {getProductIconComponentByName(name, 24)}
+                    {getProductIconComponentByName(product.name, 24)}
                 </Box>
 
                 {/* Product Name */}
@@ -101,7 +84,7 @@ export default function ProductItem({ name, productId, price, packageSize, subca
                         whiteSpace: "nowrap",
                     }}
                 >
-                    {name}
+                    {product.name}
                 </Typography>
             </Box>
 

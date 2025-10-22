@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { SubCategoryEntity } from '@beije/shared';
+import { ISubCategory } from '@beije/shared';
 import { baseQuery } from './baseApi';
 
 export const subCategoryApi = createApi({
@@ -8,15 +8,15 @@ export const subCategoryApi = createApi({
     tagTypes: ['SubCategory'],
     endpoints: (builder) => ({
         // Sub Categories endpoints
-        getSubCategories: builder.query<SubCategoryEntity[], void>({
+        getSubCategories: builder.query<ISubCategory[], void>({
             query: () => '/sub-categories',
             providesTags: ['SubCategory'],
         }),
-        getSubCategoryById: builder.query<SubCategoryEntity, string>({
+        getSubCategoryById: builder.query<ISubCategory, string>({
             query: (id) => `/sub-categories/${id}`,
             providesTags: (result, error, id) => [{ type: 'SubCategory', id }],
         }),
-        getSubCategoriesByMainCategory: builder.query<SubCategoryEntity[], string>({
+        getSubCategoriesByMainCategory: builder.query<ISubCategory[], string>({
             query: (mainCategoryId) => `/sub-categories?mainCategoryId=${mainCategoryId}`,
             providesTags: ['SubCategory'],
         }),

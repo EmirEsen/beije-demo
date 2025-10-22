@@ -1,11 +1,11 @@
 "use client";
 import { createContext, useContext, useState } from "react";
-import { ProductEntity } from "@beije/shared";
+import { IProduct } from "@beije/shared";
 
 
 interface CustomPacketContextType {
-    selections: ProductEntity[];
-    addProduct: (product: ProductEntity) => void;
+    selections: IProduct[];
+    addProduct: (product: IProduct) => void;
     removeProduct: (id: string) => void;
     updateQuantity: (id: string, quantity: number) => void;
     clearSelection: () => void;
@@ -16,15 +16,15 @@ interface CustomPacketContextType {
 const CustomPacketContext = createContext<CustomPacketContextType | null>(null);
 
 export const CustomPacketProvider = ({ children }: { children: React.ReactNode }) => {
-    const [selections, setSelections] = useState<ProductEntity[]>([]);
+    const [selections, setSelections] = useState<IProduct[]>([]);
 
-    const addProduct = (product: ProductEntity) => {
+    const addProduct = (product: IProduct) => {
         setSelections((prev) => {
-            const existing = prev.find((p) => p._id === product._id);
+            const existing = prev.find((p) => p.id === product.id);
             if (existing) {
                 const newPackageSize = existing.packageSize + product.packageSize;
                 return prev.map((p) =>
-                    p._id === product._id ? { ...p, packageSize: newPackageSize } : p
+                    p.id === product.id ? { ...p, packageSize: newPackageSize } : p
                 );
             }
             return [...prev, product];
@@ -32,15 +32,15 @@ export const CustomPacketProvider = ({ children }: { children: React.ReactNode }
     };
 
     const removeProduct = (id: string) => {
-        setSelections((prev) => prev.filter((p) => p._id !== id));
+        setSelections((prev) => prev.filter((p) => p.id !== id));
     };
 
     const updateQuantity = (id: string, quantity: number) => {
         setSelections((prev) => {
             if (quantity <= 0) {
-                return prev.filter((p) => p._id !== id);
+                return prev.filter((p) => p.id !== id);
             }
-            return prev.map((p) => (p._id === id ? { ...p, packageSize: quantity } : p));
+            return prev.map((p) => (p.id === id ? { ...p, packageSize: quantity } : p));
         });
     };
 

@@ -6,12 +6,13 @@ import { useCustomPacket } from "../contexts/CustomPacketContext"
 import { addToCart } from "../store/slices/cartSlice"
 import TrashIcon from "./icons/TrashIcon"
 import { useEffect } from "react"
+import { IProduct, ISubCategory } from "@beije/shared"
 
 interface MobileCustomPacketModalProps {
     open: boolean
     onClose: () => void
     onOpen: () => void
-    subCategories?: any[]
+    subCategories?: ISubCategory[]
 }
 
 export default function MobileCustomPacketModal({ open, onClose, onOpen, subCategories }: MobileCustomPacketModalProps) {
@@ -31,7 +32,7 @@ export default function MobileCustomPacketModal({ open, onClose, onOpen, subCate
 
     // Group items by subcategory
     const groupedItems = selections.reduce((acc, item) => {
-        const subcategory = subCategories?.find(sub => sub._id === item.subcategoryId)
+        const subcategory = subCategories?.find(sub => sub.id === item.subcategoryId)
         if (subcategory) {
             const subcategoryKey = subcategory.name
             if (!acc[subcategoryKey]) {
@@ -61,7 +62,7 @@ export default function MobileCustomPacketModal({ open, onClose, onOpen, subCate
     const handleRemoveCategory = (subcategoryName: string) => {
         const itemsInCategory = groupedItems[subcategoryName] || []
         itemsInCategory.forEach(item => {
-            removeProduct(item._id)
+            removeProduct(item.id)
         })
     }
 
@@ -69,7 +70,7 @@ export default function MobileCustomPacketModal({ open, onClose, onOpen, subCate
         // Add all selected items to the global cart
         selections.forEach(item => {
             dispatch(addToCart({
-                productId: item._id,
+                productId: item.id,
                 name: item.name,
                 price: item.price,
                 quantity: item.packageSize
@@ -256,9 +257,9 @@ export default function MobileCustomPacketModal({ open, onClose, onOpen, subCate
                                     </Box>
 
                                     {/* Product items */}
-                                    {items.map((item) => (
+                                    {items.map((item: IProduct) => (
                                         <Box
-                                            key={item._id}
+                                            key={item.id}
                                             sx={{
                                                 display: "flex",
                                                 alignItems: "center",

@@ -8,7 +8,7 @@ import TwoMonthDeliveryBadge from "../../components/icons/TwoMonthDeliveryBadge"
 import ProductSection from "../../components/ProductSection"
 import CustomPacketSidebar from "../../components/CustomPacketSidebar"
 import MobileCustomPacketModal from "../../components/MobileCustomPacketModal"
-import { MainCategory, MainCategoryEntity } from "@beije/shared"
+import { MainCategory, IMainCategory } from "@beije/shared"
 import { getMainCategoryDisplayName } from "../../lib/getCategoryAssets"
 import { CustomPacketProvider } from "../../contexts/CustomPacketContext"
 
@@ -127,9 +127,9 @@ export default function CustomPacketPage() {
                                         },
                                     }}
                                 >
-                                    {mainCategories.map((category: MainCategoryEntity) => (
+                                    {mainCategories.map((category: IMainCategory) => (
                                         <Tab
-                                            key={category._id}
+                                            key={category.id}
                                             label={getMainCategoryDisplayName(category.name as MainCategory)}
                                             sx={{
                                                 textTransform: "none",

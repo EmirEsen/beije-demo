@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { MainCategoryEntity } from '@beije/shared';
+import { IMainCategory } from '@beije/shared';
 import { baseQuery } from './baseApi';
 
 export const mainCategoryApi = createApi({
@@ -8,11 +8,11 @@ export const mainCategoryApi = createApi({
     tagTypes: ['MainCategory'],
     endpoints: (builder) => ({
         // Main Categories endpoints
-        getMainCategories: builder.query<MainCategoryEntity[], void>({
+        getMainCategories: builder.query<IMainCategory[], void>({
             query: () => '/main-categories',
             providesTags: ['MainCategory'],
         }),
-        getMainCategoryById: builder.query<MainCategoryEntity, string>({
+        getMainCategoryById: builder.query<IMainCategory, string>({
             query: (id) => `/main-categories/${id}`,
             providesTags: (result, error, id) => [{ type: 'MainCategory', id }],
         }),

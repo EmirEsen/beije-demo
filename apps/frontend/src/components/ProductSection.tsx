@@ -4,11 +4,11 @@ import { Box, CircularProgress, Typography } from "@mui/material"
 import { useGetSubCategoriesQuery } from "../store/apis/subCategoryApi"
 import { useGetProductsQuery } from "../store/apis/productApi"
 import ProductCategoryAccordion from "./ProductCategoryAccordion"
-import { getSubCategoryIcon } from "../lib/getCategoryAssets"
+import { IProduct, IMainCategory, ISubCategory } from "@beije/shared"
 
 interface ProductSectionProps {
     activeTab: number
-    mainCategories?: any[]
+    mainCategories?: IMainCategory[]
 }
 
 export default function ProductSection({ activeTab, mainCategories }: ProductSectionProps) {
@@ -41,47 +41,37 @@ export default function ProductSection({ activeTab, mainCategories }: ProductSec
 
     // Filter subcategories by the selected main category
     const filteredSubCategories = subCategories?.filter(subCategory =>
-        subCategory.mainCategoryId === selectedMainCategory?._id
+        subCategory.mainCategoryId === selectedMainCategory?.id
     ) || []
 
     // Filter products based on the filtered subcategories
     const filteredProducts = products?.filter(product =>
-        filteredSubCategories.some(sub => sub._id === product.subcategoryId)
+        filteredSubCategories.some(sub => sub.id === product.subcategoryId)
     ) || []
 
-    // Group products by subcategory
-    const groupedProducts = filteredProducts.reduce((acc, product) => {
-        const subCategory = subCategories?.find(sub => sub._id === product.subcategoryId)
+    // adding products to subcategories
+    const groupedProducts = filteredProducts.reduce((acc: Record<string, ISubCategory & { variants: IProduct[] }>, product: IProduct) => {
+        const subCategory = subCategories?.find(sub => sub.id === product.subcategoryId)
         if (subCategory) {
-            const subCategoryKey = subCategory._id
+            const subCategoryKey = subCategory.id
             if (!acc[subCategoryKey]) {
                 acc[subCategoryKey] = {
-                    _id: subCategory._id,
-                    name: subCategory.name,
-                    icon: getSubCategoryIcon(subCategory.name),
-                    description: subCategory.description,
+                    ...subCategory,
                     variants: []
                 }
             }
-            acc[subCategoryKey].variants.push({
-                _id: product._id,
-                name: product.name,
-                price: product.price,
-                packageSize: product.packageSize,
-                subcategoryId: product.subcategoryId,
-                isActive: product.isActive,
-            })
+            acc[subCategoryKey].variants.push(product)
         }
         return acc
-    }, {} as Record<string, any>)
+    }, {} as Record<string, ISubCategory & { variants: IProduct[] }>)
 
     const subCategoriesList = Object.values(groupedProducts)
 
     return (
         <Box>
-            {subCategoriesList.map((subCategory, index) => (
+            {subCategoriesList.map((subCategory: ISubCategory & { variants: IProduct[] }, index: number) => (
                 <ProductCategoryAccordion
-                    key={subCategory._id}
+                    key={subCategory.id}
                     subCategory={subCategory}
                     defaultExpanded={index === 0}
                 />
