@@ -30,7 +30,7 @@ export class MainCategoryService {
         };
     }
 
-    async create(mainCategoryData: any): Promise<MainCategoryEntity> {
+    async create(mainCategoryData: MainCategoryEntity): Promise<MainCategoryEntity> {
         const mainCategory = new this.mainCategoryModel(mainCategoryData);
         return mainCategory.save();
     }

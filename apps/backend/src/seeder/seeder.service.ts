@@ -2,7 +2,8 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { MainCategoryService } from '../app/main-category/main-category.service';
 import { SubCategoryService } from '../app/sub-category/sub-category.service';
 import { ProductService } from '../app/product/product.service';
-import { MainCategory, MenstrualSubCategory, SupportiveSubCategory } from '@beije/shared';
+import { MainCategory, MenstrualSubCategory, SupportiveSubCategory, ISubCategory, IMainCategory } from '@beije/shared';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class SeederService implements OnModuleInit {
@@ -40,11 +41,12 @@ export class SeederService implements OnModuleInit {
 
             for (const mainCategory of mainCategories) {
                 await this.mainCategoryService.create(mainCategory);
+                console.log(`-- Created main category: ${mainCategory.name}`);
             }
 
-            console.log('✅Main categories seeded successfully!');
+            console.log('Main categories added to database successfully!');
         } catch (error) {
-            console.error('❌ Error seeding main categories:', error);
+            console.error('Error seeding main categories:', error);
         }
     }
 
@@ -62,37 +64,42 @@ export class SeederService implements OnModuleInit {
             }
 
             // Get main categories to get their IDs
-            const mainCategories = await this.mainCategoryService.findAll() as any[];
-            const menstrualId = mainCategories.find(c => c.name === MainCategory.MENSTRUAL)?._id;
-            const supportiveId = mainCategories.find(c => c.name === MainCategory.SUPPORTIVE)?._id;
+            const mainCategories = await this.mainCategoryService.findAll() as IMainCategory[];
+            const menstrualId = mainCategories.find(c => c.name === MainCategory.MENSTRUAL)?.id;
+            const supportiveId = mainCategories.find(c => c.name === MainCategory.SUPPORTIVE)?.id;
 
-            const subCategories = [
+            if (!menstrualId || !supportiveId) {
+                console.error('Main categories not found. Please seed main categories first.');
+                return;
+            }
+
+            const subCategories: any[] = [
                 {
                     name: MenstrualSubCategory.PAD,
-                    mainCategoryId: menstrualId,
+                    mainCategoryId: new Types.ObjectId(menstrualId),
                     description: 'Çoğu beije kullanıcısı normal yoğunlukta bir regl dönemi için abonelik paketinde 20 Standart, 20 Süper Ped tercih ediyor.',
                 },
                 {
                     name: MenstrualSubCategory.PANTY_LINER,
-                    mainCategoryId: menstrualId,
+                    mainCategoryId: new Types.ObjectId(menstrualId),
                 },
                 {
                     name: MenstrualSubCategory.TAMPON,
-                    mainCategoryId: menstrualId,
+                    mainCategoryId: new Types.ObjectId(menstrualId),
                 },
                 {
                     name: SupportiveSubCategory.HEATING_PAD,
-                    mainCategoryId: supportiveId,
+                    mainCategoryId: new Types.ObjectId(supportiveId),
                     description: "Isı Bandı'nı hem kas ağrıların hem de regl ağrıların için kullanabilirsin!",
                 },
                 {
                     name: SupportiveSubCategory.CYCLE_ESSENTIALS,
-                    mainCategoryId: supportiveId,
+                    mainCategoryId: new Types.ObjectId(supportiveId),
                     description: "Cycle Essentials'ın bir şişesi, iki aylık döngüne yetecek miktarda, 32 kapsül içerir.",
                 },
                 {
                     name: SupportiveSubCategory.CRANBERRY_ESSENTIALS,
-                    mainCategoryId: supportiveId,
+                    mainCategoryId: new Types.ObjectId(supportiveId),
                     description: "Cranberry Essentials'ın bir şişesi, tamamı vegan bileşenlerden oluşan 30 kapsül içerir.",
                 },
             ];
@@ -102,16 +109,21 @@ export class SeederService implements OnModuleInit {
                     // Check if this specific subcategory already exists
                     const existing = await this.subCategoryService.findByName(subCategory.name);
                     if (!existing) {
-                        await this.subCategoryService.create(subCategory);
+                        try {
+                            await this.subCategoryService.create(subCategory);
+                            console.log(`---- Created subcategory: ${subCategory.name}`);
+                        } catch (error) {
+                            console.error(`Failed to create subcategory ${subCategory.name}:`, error);
+                        }
                     } else {
-                        console.log(`⏭️ Subcategory already exists: ${subCategory.name}`);
+                        console.log(`Subcategory already exists: ${subCategory.name}`);
                     }
                 }
             }
 
-            console.log('✅ Sub categories seeded successfully!');
+            console.log('Sub categories added to database successfully!');
         } catch (error) {
-            console.error('❌ Error seeding sub categories:', error);
+            console.error('Error adding sub categories to database:', error);
         }
     }
 
@@ -125,7 +137,7 @@ export class SeederService implements OnModuleInit {
             }
 
             // Get all subcategories to map products to subcategoryIds
-            const subCategories = await this.subCategoryService.findAll() as any[];
+            const subCategories = await this.subCategoryService.findAll() as ISubCategory[];
 
             const products = [
                 // MENSTRUAL Products - PAD
@@ -133,96 +145,103 @@ export class SeederService implements OnModuleInit {
                     name: 'Standart Ped',
                     price: 9.5,
                     packageSize: 10,
-                    subcategoryId: subCategories.find(c => c.name === MenstrualSubCategory.PAD)?._id,
+                    subcategoryId: new Types.ObjectId(subCategories.find(c => c.name === MenstrualSubCategory.PAD)?.id),
                 },
                 {
                     name: 'beije Süper Ped',
                     price: 10.6,
                     packageSize: 10,
-                    subcategoryId: subCategories.find(c => c.name === MenstrualSubCategory.PAD)?._id,
+                    subcategoryId: new Types.ObjectId(subCategories.find(c => c.name === MenstrualSubCategory.PAD)?.id),
                 },
                 {
                     name: 'Süper+ Ped',
                     price: 11.5,
                     packageSize: 10,
-                    subcategoryId: subCategories.find(c => c.name === MenstrualSubCategory.PAD)?._id,
+                    subcategoryId: new Types.ObjectId(subCategories.find(c => c.name === MenstrualSubCategory.PAD)?.id),
                 },
                 // MENSTRUAL Products - PANTY_LINER
                 {
                     name: 'Günlük Ped',
                     price: 5.5,
                     packageSize: 10,
-                    subcategoryId: subCategories.find(c => c.name === MenstrualSubCategory.PANTY_LINER)?._id,
+                    subcategoryId: new Types.ObjectId(subCategories.find(c => c.name === MenstrualSubCategory.PANTY_LINER)?.id),
                 },
                 {
                     name: 'Süper Günlük Ped',
                     price: 4.1,
                     packageSize: 10,
-                    subcategoryId: subCategories.find(c => c.name === MenstrualSubCategory.PANTY_LINER)?._id,
+                    subcategoryId: new Types.ObjectId(subCategories.find(c => c.name === MenstrualSubCategory.PANTY_LINER)?.id),
                 },
                 {
                     name: 'Tanga Günlük Ped',
                     price: 1.25,
                     packageSize: 10,
-                    subcategoryId: subCategories.find(c => c.name === MenstrualSubCategory.PANTY_LINER)?._id,
+                    subcategoryId: new Types.ObjectId(subCategories.find(c => c.name === MenstrualSubCategory.PANTY_LINER)?.id),
                 },
                 // MENSTRUAL Products - TAMPON
                 {
                     name: 'Mini Tampon',
                     price: 9.9,
                     packageSize: 10,
-                    subcategoryId: subCategories.find(c => c.name === MenstrualSubCategory.TAMPON)?._id,
+                    subcategoryId: new Types.ObjectId(subCategories.find(c => c.name === MenstrualSubCategory.TAMPON)?.id),
                 },
                 {
                     name: 'Standart Tampon',
                     price: 10.5,
                     packageSize: 10,
-                    subcategoryId: subCategories.find(c => c.name === MenstrualSubCategory.TAMPON)?._id,
+                    subcategoryId: new Types.ObjectId(subCategories.find(c => c.name === MenstrualSubCategory.TAMPON)?.id),
                 },
                 {
                     name: 'Süper Tampon',
                     price: 11.3,
                     packageSize: 10,
-                    subcategoryId: subCategories.find(c => c.name === MenstrualSubCategory.TAMPON)?._id,
+                    subcategoryId: new Types.ObjectId(subCategories.find(c => c.name === MenstrualSubCategory.TAMPON)?.id),
                 },
                 // SUPPORTIVE Products - HEATING_PAD
                 {
                     name: "2'li Paket Isı Bandı",
                     price: 99.5,
                     packageSize: 1,
-                    subcategoryId: subCategories.find(c => c.name === SupportiveSubCategory.HEATING_PAD)?._id,
+                    subcategoryId: new Types.ObjectId(subCategories.find(c => c.name === SupportiveSubCategory.HEATING_PAD)?.id),
                 },
                 {
                     name: "4'li Paket Isı Bandı",
                     price: 187.55,
                     packageSize: 1,
-                    subcategoryId: subCategories.find(c => c.name === SupportiveSubCategory.HEATING_PAD)?._id,
+                    subcategoryId: new Types.ObjectId(subCategories.find(c => c.name === SupportiveSubCategory.HEATING_PAD)?.id),
                 },
                 // SUPPORTIVE Products - CYCLE_ESSENTIALS
                 {
                     name: 'beije Cycle Essentials',
                     price: 440,
                     packageSize: 1,
-                    subcategoryId: subCategories.find(c => c.name === SupportiveSubCategory.CYCLE_ESSENTIALS)?._id,
+                    subcategoryId: new Types.ObjectId(subCategories.find(c => c.name === SupportiveSubCategory.CYCLE_ESSENTIALS)?.id),
                 },
                 // SUPPORTIVE Products - CRANBERRY_ESSENTIALS
                 {
                     name: 'beije Cranberry Essentials',
                     price: 345,
                     packageSize: 1,
-                    subcategoryId: subCategories.find(c => c.name === SupportiveSubCategory.CRANBERRY_ESSENTIALS)?._id,
+                    subcategoryId: new Types.ObjectId(subCategories.find(c => c.name === SupportiveSubCategory.CRANBERRY_ESSENTIALS)?.id),
                 },
             ];
 
             for (const product of products) {
                 if (product.subcategoryId) {
-                    await this.productService.create(product);
+                    try {
+                        await this.productService.create(product);
+                        console.log(`------ Created product: ${product.name}`);
+                    } catch (error) {
+                        console.error(`Failed to create product ${product.name}:`, error);
+                    }
+                } else {
+                    console.log(`Skipping product ${product.name} - subcategory not found`);
                 }
             }
 
-            console.log('✅ Products seeded successfully!');
+            console.log('Products added to database successfully!');
         } catch (error) {
-            console.error('❌ Error seeding products:', error);
+            console.error('Error adding products to database:', error);
         }
     }
 }
