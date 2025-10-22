@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SubCategoryEntity, SubCategoryDocument } from './sub-category.schema';
-import { MainCategory } from '@beije/shared';
+import { MainCategory, ISubCategory } from '@beije/shared';
 
 @Injectable()
 export class SubCategoryService {
@@ -11,16 +11,35 @@ export class SubCategoryService {
         private subCategoryModel: Model<SubCategoryDocument>,
     ) { }
 
-    async findAll(): Promise<SubCategoryEntity[]> {
-        return this.subCategoryModel.find().lean();
+    async findAll(): Promise<ISubCategory[]> {
+        const subCategories = await this.subCategoryModel.find().lean();
+        return subCategories.map(subCategory => ({
+            id: subCategory._id.toString(),
+            name: subCategory.name,
+            mainCategoryId: subCategory.mainCategoryId.toString(),
+            description: subCategory.description
+        }));
     }
 
-    async findByMainCategory(mainCategory: MainCategory): Promise<SubCategoryEntity[]> {
-        return this.subCategoryModel.find({ mainCategoryId: mainCategory }).lean();
+    async findByMainCategory(mainCategory: MainCategory): Promise<ISubCategory[]> {
+        const subCategories = await this.subCategoryModel.find({ mainCategoryId: mainCategory }).lean();
+        return subCategories.map(subCategory => ({
+            id: subCategory._id.toString(),
+            name: subCategory.name,
+            mainCategoryId: subCategory.mainCategoryId.toString(),
+            description: subCategory.description
+        }));
     }
 
-    async findByName(name: string): Promise<SubCategoryEntity | null> {
-        return this.subCategoryModel.findOne({ name }).lean();
+    async findByName(name: string): Promise<ISubCategory | null> {
+        const subCategory = await this.subCategoryModel.findOne({ name }).lean();
+        if (!subCategory) return null;
+        return {
+            id: subCategory._id.toString(),
+            name: subCategory.name,
+            mainCategoryId: subCategory.mainCategoryId.toString(),
+            description: subCategory.description
+        };
     }
 
     async create(subCategoryData: SubCategoryEntity): Promise<SubCategoryEntity> {
